@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# Handy script which helps bui;d and sign all the packages. 
+# Packages are signed using https://keys.openpgp.org/vks/v1/by-fingerprint/72BCD27BAA27CDD3B33428C7A5B2DA287047EE84
+cd "$(dirname "$0")" || exit
+# Function to build and sign a package
+build_and_sign() {
+    local pkg_dir="$1"
+    
+    if [[ -d "$pkg_dir" && -f "$pkg_dir/PKGBUILD" ]]; then
+        echo "Building and signing package in $pkg_dir..."
+        cd "$pkg_dir" || return
+        
+        # Build the package
+        makepkg -sr --sign
+        
+        cd - || return
+    else
+        echo "Skipping $pkg_dir: Not a valid package directory."
+    fi
+}
+
+packages=("ckbcomp" "hardened-malloc" "mullvad-browser-bin")
+
+for pkg in "${packages[@]}"; do
+    build_and_sign "$pkg"
+done
+
+echo "All packages have been built and signed."
