@@ -1,29 +1,95 @@
 #!/bin/bash
 
-# Handy script which helps bui;d and sign all the packages. 
+# Prism OS <nexus-x at tuta dot io>
+# Helper script.
 # Packages are signed using https://keys.openpgp.org/vks/v1/by-fingerprint/72BCD27BAA27CDD3B33428C7A5B2DA287047EE84
+
 cd "$(dirname "$0")" || exit
-# Function to build and sign a package
+
 build_and_sign() {
     local pkg_dir="$1"
-    
+
     if [[ -d "$pkg_dir" && -f "$pkg_dir/PKGBUILD" ]]; then
         echo "Building and signing package in $pkg_dir..."
         cd "$pkg_dir" || return
-        
+
         # Build the package
         makepkg -sr --sign
-        
+
         cd - || return
     else
         echo "Skipping $pkg_dir: Not a valid package directory."
     fi
 }
 
-packages=("ckbcomp" "hardened-malloc" "mullvad-browser-bin")
+clean=false
+move_dir=""
+build=false
 
-for pkg in "${packages[@]}"; do
-    build_and_sign "$pkg"
+# Function to display help message
+show_help() {
+    echo "Usage: $0 [OPTIONS]"
+    echo
+    echo "Options:"
+    echo "  --build       Build and sign the packages."
+    echo "  --move PATH   Move the built package files to the specified PATH."
+    echo "  --clean       Clean up temporary files and directories."
+    echo "  --help        Display this help message."
+    echo
+    echo "Example:"
+    echo "  $0 --build --move /path/to/destination --clean"
+    exit 0
+}
+
+# Parse command-line arguments
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        --help) show_help ;;
+        --clean) clean=true ;;
+        --move) 
+            shift
+            move_dir="$1"
+            ;;
+        --build) 
+            build=true
+            ;;
+        *) show_help ;;  # Show help for unknown options
+    esac
+    shift
 done
 
-echo "All packages have been built and signed."
+# List of packages to build
+packages=("ckbcomp" "hardened-malloc" "lkrg-dkms" "mullvad-browser-bin")
+
+# Build packages if --build option is provided
+if $build; then
+    for pkg in "${packages[@]}"; do
+        build_and_sign "$pkg"
+    done
+    echo "All packages have been built and signed."
+fi
+
+# Move the package files if --move option was provided
+if [[ -n "$move_dir" ]]; then
+    # Check if the destination directory exists
+    if [[ ! -d "$move_dir" ]]; then
+        echo "Directory $move_dir does not exist. Creating it..."
+        mkdir -p "$move_dir"
+    fi
+
+    # Move the package files
+    for pkg in "${packages[@]}"; do
+            mv "$pkg"/*.pkg.tar.zst "$move_dir"
+            mv "$pkg"/*.pkg.tar.zst.sig "$move_dir"
+    done
+
+    echo "Package files moved to $move_dir."
+fi
+
+if $clean; then
+    echo "Cleaning up directories..."
+    for pkg in "${packages[@]}"; do
+		 rm -rf {$pkg/src,$pkg/pkg,$pkg/*.tar.gz,$pkg/*.tar.xz,$pkg/*.tar.xz.asc,$pkg/*.pkg.tar.zst,$pkg/*.pkg.tar.zst.sig,$pkg/hardened_malloc,$pkg/*.tar.gz.sign}
+    done
+    echo "Directories cleaned."
+fi

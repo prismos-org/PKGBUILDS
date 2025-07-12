@@ -20,4 +20,4 @@ export FONTCONFIG_FILE="fonts.conf"
 # $HOME/.cache/nvidia. We we can easily disable it.
 export __GL_SHADER_DISK_CACHE=0
 
-exec /opt/mullvad-browser/mullvadbrowser "$@" $USER_FLAGS
+exec ld-no-preload /opt/mullvad-browser/mullvadbrowser $@ $USER_FLAGS
