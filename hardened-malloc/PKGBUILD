@@ -1,4 +1,4 @@
-# Maintainer: nexus <nexus-x at tuta dot io>
+# Maintainer: nexus <nexus-x[at]tuta[dot]io> 
 
 pkgname="hardened-malloc"
 pkgver=13+r730+g7481c8857

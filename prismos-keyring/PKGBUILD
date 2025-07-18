@@ -1,0 +1,20 @@
+pkgname=prismos-keyring
+pkgver=1
+pkgrel=1
+pkgdesc='Prism OS keyring'
+arch=('any')
+url='https://github.com/prismos-org/prismos-keyring/'
+license=('GPL-3.0-or-later')
+install="${pkgname}.install"
+source=('https://raw.githubusercontent.com/prismos-org/prismos-keyring/master/Makefile'
+        'https://raw.githubusercontent.com/prismos-org/prismos-keyring/master/prismos.gpg'
+        'https://raw.githubusercontent.com/prismos-org/prismos-keyring/master/prismos-trusted')
+validpgpkeys=('72BCD27BAA27CDD3B33428C7A5B2DA287047EE84')
+sha512sums=('06779f4ad4d814c4d53e234687298fee302d279b3587fbbf8bb091fafc69b9329b2dbdd91330f61a1675f7887aadc3436f62f933f7477913939803da843d1289'
+            '2ab97d8366e55b377323337225b889c9c8fd6357e030a5a4a2cbc7594f88394b3d05255a35790a711b33d8de27783648c45181f68de226b2d6a6abba60223fab'
+            '9597424b67b6c8dd73bc6294caa3a3bc719b9713f441c731d6c84cd7d64b07c426985b64a88f1f6e31e3946e5ead8300847c86e316a6df032546af4006ca0b53')
+
+package() {
+	cd "${srcdir}"
+	make PREFIX=/usr DESTDIR=${pkgdir} install
+}

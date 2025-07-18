@@ -1,5 +1,5 @@
 # Original AUR package: https://aur.archlinux.org/packages/mullvad-browser-bin modified to be used In Prism OS
-# Maintainer: nexus <nexus-x at tuta dot io>
+# Maintainer: nexus <nexus-x[at]tuta[dot]io> 
 
 # Fetching the signing key:
 #     https://mullvad.net/en/help/verifying-mullvad-browser-signature
@@ -71,7 +71,8 @@ changelog='mullvad-browser.changelog'
 
 sha256sums=('0c911cfb61891f11b8f5eb95a701fc87fc8ba11e83567d1ad195054b8dbd5da0'
             'SKIP'
-            '81e841a7f4a2f3b8bf4410fcb134ef3f0e9426472de5c95578dda62b96cafc34'
+	    '8838ce35da1d600cb5e0118d37d27c356e193eaa4366a88d754766bfea275a95'
+            #'81e841a7f4a2f3b8bf4410fcb134ef3f0e9426472de5c95578dda62b96cafc34'
             'd2441b3868312707e36579adfd13903217af1b3187e0505525276ef3cbe9c5b9')
 package() {
   local pkg=${pkgname%%-bin}

@@ -59,7 +59,7 @@ while [[ "$#" -gt 0 ]]; do
 done
 
 # List of packages to build
-packages=("ckbcomp" "hardened-malloc" "lkrg-dkms" "mullvad-browser-bin")
+packages=("ckbcomp" "hardened-malloc" "lkrg-dkms" "mullvad-browser-bin" "prismos-keyring" "pusbctl")
 
 # Build packages if --build option is provided
 if $build; then
@@ -89,7 +89,7 @@ fi
 if $clean; then
     echo "Cleaning up directories..."
     for pkg in "${packages[@]}"; do
-		 rm -rf {$pkg/src,$pkg/pkg,$pkg/*.tar.gz,$pkg/*.tar.xz,$pkg/*.tar.xz.asc,$pkg/*.pkg.tar.zst,$pkg/*.pkg.tar.zst.sig,$pkg/hardened_malloc,$pkg/*.tar.gz.sign}
+		 rm -rf {$pkg/src,$pkg/pkg,$pkg/*.tar.gz,$pkg/*.tar.xz,$pkg/*.tar.xz.asc,$pkg/*.pkg.tar.zst,$pkg/*.pkg.tar.zst.sig,$pkg/hardened_malloc,$pkg/*.tar.gz.sig,$pkg/pusbctl}
     done
     echo "Directories cleaned."
 fi
