@@ -1,0 +1,27 @@
+--- hardened_malloc/chacha.c	2025-07-19 11:41:54.777742936 +0530
++++ hardened_malloc-13/chacha.c	2024-10-12 12:53:52.000000000 +0530
+@@ -41,7 +41,7 @@
+     a = PLUS(a, b); d = ROTATE(XOR(d, a), 8); \
+     c = PLUS(c, d); b = ROTATE(XOR(b, c), 7);
+ 
+-static const char sigma[16] NONSTRING = "expand 32-byte k";
++static const char sigma[16] = "expand 32-byte k";
+ 
+ void chacha_keysetup(chacha_ctx *x, const u8 *k) {
+     x->input[0] = U8TO32_LITTLE(sigma + 0);
+--- hardened_malloc/util.h	2025-07-19 11:41:54.780724313 +0530
++++ hardened_malloc-13/util.h	2024-10-12 12:53:52.000000000 +0530
+@@ -32,13 +32,6 @@
+ #define STRINGIFY(s) #s
+ #define ALIAS(f) __attribute__((alias(STRINGIFY(f))))
+ 
+-// supported since GCC 15
+-#if __has_attribute (nonstring)
+-#  define NONSTRING __attribute__ ((nonstring))
+-#else
+-#  define NONSTRING
+-#endif
+-
+ typedef uint8_t u8;
+ typedef uint16_t u16;
+ typedef uint32_t u32;

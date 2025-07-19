@@ -1,35 +1,37 @@
 # Maintainer: nexus <nexus-x[at]tuta[dot]io> 
 
-pkgname="hardened-malloc"
-pkgver=13+r730+g7481c8857
+pkgname=hardened-malloc
+pkgver=13
 pkgrel=1
-pkgdesc="Hardened allocator designed for modern systems."
+pkgdesc="Hardened memory allocator."
+arch=('x86_64')
 url="https://github.com/GrapheneOS/hardened_malloc"
-license=("MIT")
+license=('MIT')
 depends=('gcc-libs')
 makedepends=('git')
 checkdepends=('python')
 provides=('libhardened_malloc.so' 'libhardened_malloc-light.so')
-arch=("x86_64")
-source=('hardened_malloc::git+https://github.com/GrapheneOS/hardened_malloc#branch=main')
-sha256sums=('SKIP')
-
-pkgver(){
+source=("git+https://github.com/GrapheneOS/hardened_malloc#tag=$pkgver" "gcc15.patch")
+sha256sums=('3e48dcfd888b3a871c0d59c6757ab328eb008e1951843c1dc75225432a4bf7db'
+            'fae28096905c6ed3c7ee772b209d8e0a57f1ebecd992c9b5c7218e65b6fe9aaf')
+prepare() {
   cd "$srcdir/hardened_malloc"
-  _version=$(git tag --sort=refname --list | grep "^[0-9]\{2,4\}$" | sort -nr | head -1)
-  _commits=$(git rev-list --count HEAD)
-  _short_commit_hash=$(git rev-parse --short=9 HEAD)
-  echo "${_version}+r${_commits}+g${_short_commit_hash}"
+  patch -p1 -i "$srcdir/gcc15.patch"
 }
 
 build() {
-  cd "${srcdir}/hardened_malloc"
+  cd "$srcdir/hardened_malloc"
   make VARIANT=default
   make VARIANT=light
 }
 
+check() {
+  cd "$srcdir/hardened_malloc"
+  make test
+}
+
 package() {
-	cd "${srcdir}/hardened_malloc"
-	install -vDm755 -t "$pkgdir/usr/lib" out/libhardened_malloc.so out-light/libhardened_malloc-light.so
-        install -vDm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  cd "$srcdir/hardened_malloc"
+  install -vDm755 -t "$pkgdir/usr/lib" out/libhardened_malloc.so out-light/libhardened_malloc-light.so
+  install -vDm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
