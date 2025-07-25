@@ -3,7 +3,7 @@ post_upgrade() {
 		/usr/bin/pacman-key --populate prismos
 	else
 		echo " >>> Run \`pacman-key --init\` to set up your pacman keyring."
-		echo " >>> Then run \`pacman-key --populate endeavouros\` to install the EndeavourOS keyring."
+		echo " >>> Then run \`pacman-key --populate prismos\` to install the Prism OS keyring."
 	fi
 }
 

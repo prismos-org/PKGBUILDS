@@ -6,8 +6,8 @@
 # If you can't open the page, here's the important line:
 #     gpg --auto-key-locate nodefault,wkd --locate-keys torbrowser@torproject.org
 
-pkgname=mullvad-browser-bin
-pkgver=14.5.4
+pkgname=mullvad-browser
+pkgver=14.5.5
 pkgrel=1
 pkgdesc='Privacy-focused web browser developed by Mullvad and the Tor Project'
 arch=(x86_64)
@@ -69,10 +69,9 @@ validpgpkeys=(
 )
 changelog='mullvad-browser.changelog'
 
-sha256sums=('0c911cfb61891f11b8f5eb95a701fc87fc8ba11e83567d1ad195054b8dbd5da0'
-            'SKIP'
+sha256sums=('3f0ab1632956eb4d9700a06f109938465f2aea7581187de916f4ceb8062daffc'
+	    'b8e47102d201dc43ce6d531b7399b1ba3c9a43e370668374e77a769a00762f4b'
 	    '8838ce35da1d600cb5e0118d37d27c356e193eaa4366a88d754766bfea275a95'
-            #'81e841a7f4a2f3b8bf4410fcb134ef3f0e9426472de5c95578dda62b96cafc34'
             'd2441b3868312707e36579adfd13903217af1b3187e0505525276ef3cbe9c5b9')
 package() {
   local pkg=${pkgname%%-bin}
