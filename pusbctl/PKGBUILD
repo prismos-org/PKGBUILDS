@@ -1,17 +1,26 @@
 # Maintainer: nexus <nexus-x[at]tuta[dot]io>
 
 pkgname=pusbctl
-pkgver=1.0
+pkgver=3.0b23261
 pkgrel=1
 pkgdesc='Linux-hardened deny_new_usb control'
 arch=('any')
 license=('MIT')
 depends=('linux-hardened' 'bash' 'usbutils' 'coreutils' 'diffutils' 'procps-ng' 'grep' 'util-linux' 'sed')
 optdepends=('tput')
-conflicts=('usbctl')
+replaces=('usbctl')
 checkdepends=('shellcheck')
 source=("git+https://github.com/prismos-org/pusbctl")
 sha512sums=('SKIP')
+pkgver() {
+  cd "${pkgname}"
+  ( set -o pipefail
+    git describe --long --tags --abbrev=7 2>/dev/null |
+      sed 's/\([^-]*-g\)/r\1/;s/-/./g' ||
+    printf "%s.%s" "$(git rev-list --count HEAD)" \
+      "$(git rev-parse --short=7 HEAD)"
+  )
+}
 check() {
   cd ${pkgname}
   make test

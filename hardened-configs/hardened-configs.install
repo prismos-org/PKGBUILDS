@@ -1,0 +1,98 @@
+__is_enabled_and_active() {
+    local ss=($1)
+    for s in "${ss[@]}"; do
+        if ! systemctl is-enabled "$s" &>/dev/null || ! systemctl is-active "$s" &>/dev/null; then
+            return 1
+        fi
+    done
+    return 0
+}
+__update_and_restart() {
+  # Backup and update GRUB config if exists
+  if [ -f /etc/default/grub ]; then
+      echo "Updating /etc/default/grub..."
+      cp -n /etc/default/grub /etc/default/grub.bak
+      sed -i 's/^GRUB_CMDLINE_LINUX_DEFAULT=".*"/GRUB_CMDLINE_LINUX_DEFAULT="lsm=landlock,lockdown,yama,integrity,apparmor,bpf module.sig_enforce=1 lockdown=confidentiality plymouth.nolog=1 mitigations=auto,nosmt spectre_v2=on spectre_bhi=on spec_store_bypass_disable=on tsx=off kvm.nx_huge_pages=force l1d_flush=on spec_rstack_overflow=safe-ret gather_data_sampling=force reg_file_data_sampling=on slab_nomerge init_on_alloc=1 init_on_free=1 pti=on vsyscall=none ia32_emulation=0 page_alloc.shuffle=1 randomize_kstack_offset=on debugfs=off oops=panic quiet splash loglevel=0 random.trust_cpu=off random.trust_bootloader=off intel_iommu=on amd_iommu=on efi=disable_early_pci_dma"/' /etc/default/grub
+      # Regenerate GRUB configuration
+      echo "Regenerating GRUB configuration..."
+      grub-mkconfig -o /boot/grub/grub.cfg
+  fi
+  local services=("chronyd" "systemd-resolved" "NetworkManager")
+  if __is_enabled_and_active "${services[@]}"; then
+        for service in "${services[@]}"; do
+            echo "Restarting $service..."
+            systemctl restart "$service"
+        done
+    else
+        for service in "${services[@]}"; do
+            if ! systemctl is-enabled "$service" &>/dev/null || ! systemctl is-active "$service" &>/dev/null; then
+                echo "Enabling and starting $service..."
+                systemctl enable --now "$service"
+            fi
+        done
+   fi
+}
+post_install() {
+  echo "Applying configurations..."
+  __update_and_restart
+  echo "Hardened configurations applied successfully, restart your system."
+  echo "NOTE: Optionally you may run the "setup" command before restarting your system to remove privilege escalation programs which are setuid binaries like sudo, su and ksu. It also disables and masks various services so as to reduce the attack surface and sets the machine's hostname to "localhost" and username to "user", in many cased these are broadcasted so keeping these generic reduces information leak."
+}
+post_upgrade() {
+  local flag="/usr/share/setup_done"
+  if [[ -f "$flag" ]]; then
+      rm -f /usr/bin/setup
+  fi
+  __update_and_restart
+}
+pre_remove() {
+  echo "Cleaning up before removal..."
+
+  rm -f /etc/chrony.conf
+  sed -i 's|/usr/lib/libhardened_malloc.so||g' /etc/ld.no.preload
+  rm -f /etc/machine-id
+  rm -f /etc/profile
+  rm -f /etc/systemd/resolved.conf
+  rm -f /etc/security/access.conf
+  rm -f /etc/security/limits.conf
+  rm -f /etc/security/faillock.conf
+  rm -f /etc/sysconfig/chronyd
+  rm -f /etc/modprobe.d/blacklist.conf
+  rm -f /etc/NetworkManager/conf.d/duid.conf
+  rm -f /etc/NetworkManager/conf.d/macrandomize.conf
+  rm -f /etc/NetworkManager/dispatcher.d/no-wait.d/01-no-send-hostname.sh
+  rm -f /etc/NetworkManager/dispatcher.d/01-no-send-hostname.sh
+  rm -f /etc/pam.d/passwd
+  rm -f /etc/polkit-1/rules.d/persist.rules
+  rm -f /etc/sysctl.d/60-hardening.conf
+  rm -f /etc/resolv.conf
+  rm -f /etc/swrappers.conf
+  rmdir --ignore-fail-on-non-empty /etc/NetworkManager/dispatcher.d/no-wait.d
+  rmdir --ignore-fail-on-non-empty /etc/NetworkManager/dispatcher.d
+  rmdir --ignore-fail-on-non-empty /etc/NetworkManager/conf.d
+  rmdir --ignore-fail-on-non-empty /etc/NetworkManager
+  rmdir --ignore-fail-on-non-empty /etc/modprobe.d
+  rmdir --ignore-fail-on-non-empty /etc/pam.d
+  rmdir --ignore-fail-on-non-empty /etc/polkit-1/rules.d
+  rmdir --ignore-fail-on-non-empty /etc/polkit-1
+  rmdir --ignore-fail-on-non-empty /etc/security
+  rmdir --ignore-fail-on-non-empty /etc/sysconfig
+  rmdir --ignore-fail-on-non-empty /etc/sysctl.d
+
+  rm -f /usr/bin/scurl
+  rm -f /usr/bin/scurld
+  rm -f /usr/bin/scurlt
+  rm -f /usr/bin/swget
+  rm -f /usr/bin/spreload
+  rm -f /usr/bin/setup
+
+  # Restore GRUB configuration
+  if [ -f /etc/default/grub.bak ]; then
+    echo "Restoring original GRUB configuration..."
+    mv -b -f /etc/default/grub.bak /etc/default/grub
+    grub-mkconfig -o /boot/grub/grub.cfg
+  else
+    sed -i 's|^GRUB_CMDLINE_LINUX_DEFAULT=.*$|GRUB_CMDLINE_LINUX_DEFAULT="quiet splash"|' /etc/default/grub
+  fi
+  echo "Cleanup completed."
+}

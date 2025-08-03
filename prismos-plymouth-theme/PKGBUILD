@@ -1,0 +1,27 @@
+
+pkgname=prismos-plymouth-theme
+pkgver=8.4bd80c7
+pkgrel=1
+pkgdesc='Plymouth theme of Prism OS.'
+arch=('any')
+url='https://github.com/prismos-org/plymouth-theme'
+license=('GPL-3.0-or-later')
+depends=('plymouth')
+makedepends=('git')
+source=("git+https://github.com/prismos-org/plymouth-theme.git")
+sha512sums=('SKIP')
+pkgver() {
+  ( set -o pipefail
+    git describe --long --tags --abbrev=7 2>/dev/null |
+      sed 's/\([^-]*-g\)/r\1/;s/-/./g' ||
+    printf "%s.%s" "$(git rev-list --count HEAD)" \
+      "$(git rev-parse --short=7 HEAD)"
+  )
+}
+package() {
+  install -Dm644 "${srcdir}/plymouth-theme/theme/prismos.plymouth" "${pkgdir}/usr/share/plymouth/themes/prismos/prismos.plymouth"
+  install -Dm644 "${srcdir}/plymouth-theme/theme/prismos.script" "${pkgdir}/usr/share/plymouth/themes/prismos/prismos.script"
+  install -Dm644 "${srcdir}/plymouth-theme/theme/logo.png" "${pkgdir}/usr/share/plymouth/themes/prismos/logo.png"
+  install -Dm644 "${srcdir}/plymouth-theme/theme/progress_bar.png" "${pkgdir}/usr/share/plymouth/themes/prismos/progress_bar.png"
+  install -Dm644 "${srcdir}/plymouth-theme/theme/progress_box.png" "${pkgdir}/usr/share/plymouth/themes/prismos/progress_box.png"
+}

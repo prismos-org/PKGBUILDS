@@ -1,5 +1,5 @@
 pkgname=prismos-keyring
-pkgver=1
+pkgver=2025081
 pkgrel=1
 pkgdesc='Prism OS keyring'
 arch=('any')
