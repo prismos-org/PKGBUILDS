@@ -27,11 +27,10 @@ package() {
   if ! grep -q "prismos" "${pkgdir}/etc/os-release"; then
       install -Dm755 "${srcdir}/hardened-configs/bin/setup" "${pkgdir}/usr/bin/setup"
   fi
-  install -Dm755 "${srcdir}/hardened-configs/bin/scurl" "${pkgdir}/usr/bin/scurl"
-  install -Dm755 "${srcdir}/hardened-configs/bin/scurld" "${pkgdir}/usr/bin/scurld"
-  install -Dm755 "${srcdir}/hardened-configs/bin/scurlt" "${pkgdir}/usr/bin/scurlt"
-  install -Dm755 "${srcdir}/hardened-configs/bin/spreload" "${pkgdir}/usr/bin/spreload"
-  install -Dm755 "${srcdir}/hardened-configs/bin/swget" "${pkgdir}/usr/bin/swget"
+  install -Dm755 "${srcdir}/hardened-configs/usr/bin/scurl" "${pkgdir}/usr/bin/scurl"
+  install -Dm755 "${srcdir}/hardened-configs/usr/bin/scurld" "${pkgdir}/usr/bin/scurld"
+  install -Dm755 "${srcdir}/hardened-configs/usr/bin/scurlt" "${pkgdir}/usr/bin/scurlt"
+  install -Dm755 "${srcdir}/hardened-configs/usr/bin/swget" "${pkgdir}/usr/bin/swget"
 
   # Configurations
   install -Dm644 "${srcdir}/hardened-configs/etc/chrony.conf" "${pkgdir}/etc/chrony.conf"
@@ -46,14 +45,18 @@ package() {
   install -Dm644 "${srcdir}/hardened-configs/etc/pam.d/passwd" "${pkgdir}/etc/pam.d/passwd"
   install -Dm644 "${srcdir}/hardened-configs/etc/polkit-1/rules.d/persist.rules" "${pkgdir}/etc/polkit-1/rules.d/persist.rules"
   install -Dm644 "${srcdir}/hardened-configs/etc/profile" "${pkgdir}/etc/profile"
-  install -Dm755 "${srcdir}/hardened-configs/etc/profile.d/disable-gnome-jit.sh" "${pkgdir}/etc/profile.d/disable-gnome-jit.sh"
-  install -Dm644 "${srcdir}/hardened-configs/etc/resolved.conf" "${pkgdir}/etc/systemd/resolved.conf"
+  install -Dm644 "${srcdir}/hardened-configs/etc/profile.d/disable-gnome-jit.sh" "${pkgdir}/etc/profile.d/disable-gnome-jit.sh"
+  install -Dm644 "${srcdir}/hardened-configs/etc/profile.d/hardened_malloc.sh" "${pkgdir}/etc/profile.d/hardened_malloc.sh"
+  install -Dm644 "${srcdir}/hardened-configs/etc/systemd/resolved.conf" "${pkgdir}/etc/systemd/resolved.conf"
   install -Dm644 "${srcdir}/hardened-configs/etc/security/access.conf" "${pkgdir}/etc/security/access.conf"
   install -Dm644 "${srcdir}/hardened-configs/etc/security/faillock.conf" "${pkgdir}/etc/security/faillock.conf"
   install -Dm644 "${srcdir}/hardened-configs/etc/security/limits.conf" "${pkgdir}/etc/security/limits.conf"
+  install -Dm644 "${srcdir}/hardened-configs/etc/security/pam_env.conf" "${pkgdir}/etc/security/pam_env.conf"
   install -Dm644 "${srcdir}/hardened-configs/etc/swrappers.conf" "${pkgdir}/etc/swrappers.conf"
   install -Dm644 "${srcdir}/hardened-configs/etc/sysconfig/chronyd" "${pkgdir}/etc/sysconfig/chronyd"
   install -Dm644 "${srcdir}/hardened-configs/etc/sysctl.d/60-hardening.conf" "${pkgdir}/etc/sysctl.d/60-hardening.conf"
+  install -Dm644 "${srcdir}/hardened-configs/usr/lib/environment.d/40-hardened-malloc.conf" "${pkgdir}/hardened-configs/usr/lib/environment.d/40-hardened-malloc.conf"
+  install -Dm644 "${srcdir}/hardened-configs/usr/lib/systemd/system.conf.d/40-hardened-malloc.conf" "${pkgdir}/hardened-configs/usr/lib/systemd/system.conf.d/40-hardened-malloc.conf"
 
   # Symlinks
   ln -sf "/run/systemd/resolve/stub-resolv.conf" "${pkgdir}/etc/resolv.conf"
