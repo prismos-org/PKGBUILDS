@@ -38,8 +38,8 @@ post_install() {
       rm -f /usr/bin/setup
   fi
   if ! grep -q "/usr/lib/libhardened_malloc.so" "${pkgdir}/etc/ld.so.preload"; then
-      echo "/usr/lib/libhardened_malloc.so" >> "${pkgdir}/etc/ld.so.preload"
-  fi  
+    echo "/usr/lib/libhardened_malloc.so" >> "${pkgdir}/etc/ld.so.preload"  
+  fi
   __update_and_restart
   echo "Hardened configurations applied successfully, restart your system."
   echo "NOTE: Optionally you may run the "setup" command before restarting your system to remove privilege escalation programs which are setuid binaries like sudo, su and ksu. It also disables and masks various services so as to reduce the attack surface and sets the machine's hostname to "localhost" and username to "user", in many cased these are broadcasted so keeping these generic reduces information leak."

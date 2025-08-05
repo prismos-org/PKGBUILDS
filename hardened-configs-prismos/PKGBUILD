@@ -1,9 +1,9 @@
 # Maintainer: nexus <nexus-x[at]tuta[dot]io>
 
-pkgname=hardened-configs
+pkgname=hardened-configs-prismos
 pkgver=7.5590829
 pkgrel=1
-pkgdesc="Hardened configurations for Linux Distributions."
+pkgdesc="Hardened configurations for Prism OS ISO."
 arch=('x86_64')
 url="https://github.com/prismos-org/hardened-configs"
 license=('GPL-3.0-or-later')
@@ -11,7 +11,7 @@ depends=('hardened-malloc' 'apparmor' 'grub' 'chrony' 'pusbctl')
 install=hardened-configs.install
 source=('git+https://github.com/prismos-org/hardened-configs' 'hardened-configs.install')
 sha512sums=('SKIP'
-'a98b67e5d713310b777e6172f862d2ed79bbfbbb9328a9f31605d236ca731fbe6c3bd3e4579f782aa0dedb3dd417cd2cfdaf71051a37b1e7cb90e2ab83165bbe')
+'8bafc46c108f44099847cc70e119d69447817d52dac9c801614f8d5e8c29d6484b4b9d6bda5a6befc01dc59397d4be4d2b10137f34a86fa4004b17672d479bfb')
 pkgver() {
   cd "${srcdir}/hardened-configs"
   ( set -o pipefail
@@ -31,30 +31,20 @@ package() {
   install -Dm755 "${srcdir}/hardened-configs/usr/bin/swget" "${pkgdir}/usr/bin/swget"
 
   # Configurations
-  install -Dm644 "${srcdir}/hardened-configs/etc/chrony.conf" "${pkgdir}/etc/chrony.conf"
-  install -Dm644 "${srcdir}/hardened-configs/etc/login.defs" "${pkgdir}/etc/login.defs"
   install -Dm644 "${srcdir}/hardened-configs/etc/machine-id" "${pkgdir}/etc/machine-id"
   install -Dm644 "${srcdir}/hardened-configs/etc/modprobe.d/blacklist.conf" "${pkgdir}/etc/modprobe.d/blacklist.conf"
   install -Dm644 "${srcdir}/hardened-configs/etc/NetworkManager/conf.d/duid.conf" "${pkgdir}/etc/NetworkManager/conf.d/duid.conf"
   install -Dm644 "${srcdir}/hardened-configs/etc/NetworkManager/conf.d/macrandomize.conf" "${pkgdir}/etc/NetworkManager/conf.d/macrandomize.conf"
   install -Dm744 "${srcdir}/hardened-configs/etc/NetworkManager/dispatcher.d/no-wait.d/01-no-send-hostname.sh" "${pkgdir}/etc/NetworkManager/dispatcher.d/no-wait.d/01-no-send-hostname.sh"
-  install -Dm644 "${srcdir}/hardened-configs/etc/pam.d/passwd" "${pkgdir}/etc/pam.d/passwd"
   install -Dm644 "${srcdir}/hardened-configs/etc/polkit-1/rules.d/persist.rules" "${pkgdir}/etc/polkit-1/rules.d/persist.rules"
-  install -Dm644 "${srcdir}/hardened-configs/etc/profile" "${pkgdir}/etc/profile"
   install -Dm644 "${srcdir}/hardened-configs/etc/profile.d/disable-gnome-jit.sh" "${pkgdir}/etc/profile.d/disable-gnome-jit.sh"
   install -Dm644 "${srcdir}/hardened-configs/etc/profile.d/hardened_malloc.sh" "${pkgdir}/etc/profile.d/hardened_malloc.sh"
-  install -Dm644 "${srcdir}/hardened-configs/etc/systemd/resolved.conf" "${pkgdir}/etc/systemd/resolved.conf"
-  install -Dm644 "${srcdir}/hardened-configs/etc/security/access.conf" "${pkgdir}/etc/security/access.conf"
-  install -Dm644 "${srcdir}/hardened-configs/etc/security/faillock.conf" "${pkgdir}/etc/security/faillock.conf"
-  install -Dm644 "${srcdir}/hardened-configs/etc/security/limits.conf" "${pkgdir}/etc/security/limits.conf"
-  install -Dm644 "${srcdir}/hardened-configs/etc/security/pam_env.conf" "${pkgdir}/etc/security/pam_env.conf"
   install -Dm644 "${srcdir}/hardened-configs/etc/swrappers.conf" "${pkgdir}/etc/swrappers.conf"
   install -Dm644 "${srcdir}/hardened-configs/etc/sysconfig/chronyd" "${pkgdir}/etc/sysconfig/chronyd"
   install -Dm644 "${srcdir}/hardened-configs/etc/sysctl.d/60-hardening.conf" "${pkgdir}/etc/sysctl.d/60-hardening.conf"
   install -Dm644 "${srcdir}/hardened-configs/usr/lib/environment.d/40-hardened-malloc.conf" "${pkgdir}/hardened-configs/usr/lib/environment.d/40-hardened-malloc.conf"
   install -Dm644 "${srcdir}/hardened-configs/usr/lib/systemd/system.conf.d/40-hardened-malloc.conf" "${pkgdir}/hardened-configs/usr/lib/systemd/system.conf.d/40-hardened-malloc.conf"
 
-  # Symlinks
-  ln -sf "/run/systemd/resolve/stub-resolv.conf" "${pkgdir}/etc/resolv.conf"
+  # Symlink
   ln -sf "/etc/NetworkManager/dispatcher.d/no-wait.d/01-no-send-hostname.sh" "${pkgdir}/etc/NetworkManager/dispatcher.d/01-no-send-hostname.sh"
 }
