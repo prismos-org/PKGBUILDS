@@ -42,8 +42,8 @@ package() {
   install -Dm644 "${srcdir}/hardened-configs/etc/swrappers.conf" "${pkgdir}/etc/swrappers.conf"
   install -Dm644 "${srcdir}/hardened-configs/etc/sysconfig/chronyd" "${pkgdir}/etc/sysconfig/chronyd"
   install -Dm644 "${srcdir}/hardened-configs/etc/sysctl.d/60-hardening.conf" "${pkgdir}/etc/sysctl.d/60-hardening.conf"
-  install -Dm644 "${srcdir}/hardened-configs/usr/lib/environment.d/40-hardened-malloc.conf" "${pkgdir}/hardened-configs/usr/lib/environment.d/40-hardened-malloc.conf"
-  install -Dm644 "${srcdir}/hardened-configs/usr/lib/systemd/system.conf.d/40-hardened-malloc.conf" "${pkgdir}/hardened-configs/usr/lib/systemd/system.conf.d/40-hardened-malloc.conf"
+  install -Dm644 "${srcdir}/hardened-configs/usr/lib/environment.d/40-hardened-malloc.conf" "${pkgdir}/usr/lib/environment.d/40-hardened-malloc.conf"
+  install -Dm644 "${srcdir}/hardened-configs/usr/lib/systemd/system.conf.d/40-hardened-malloc.conf" "${pkgdir}/usr/lib/systemd/system.conf.d/40-hardened-malloc.conf"
 
   # Symlink
   ln -sf "/etc/NetworkManager/dispatcher.d/no-wait.d/01-no-send-hostname.sh" "${pkgdir}/etc/NetworkManager/dispatcher.d/01-no-send-hostname.sh"

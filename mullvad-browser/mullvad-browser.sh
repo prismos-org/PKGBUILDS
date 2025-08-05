@@ -19,5 +19,6 @@ export FONTCONFIG_FILE="fonts.conf"
 # tor-browser-build#41017: Nvidia drivers create a shader cache by default in
 # $HOME/.cache/nvidia. We we can easily disable it.
 export __GL_SHADER_DISK_CACHE=0
+export LD_PRELOAD=
 
-exec ld-no-preload /opt/mullvad-browser/mullvadbrowser $@ $USER_FLAGS
+exec /opt/mullvad-browser/mullvadbrowser $@ $USER_FLAGS
