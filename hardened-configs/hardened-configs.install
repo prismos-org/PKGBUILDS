@@ -34,12 +34,15 @@ __update_and_restart() {
 }
 post_install() {
   echo "Applying configurations..."
-  if grep -q "prismos" "${pkgdir}/etc/os-release"; then
+  if grep -q "prismos" "/etc/os-release"; then
       rm -f /usr/bin/setup
+  else
+      rm -f /etc/sysctl.d/90-enable-userns.conf
   fi
-  if ! grep -q "/usr/lib/libhardened_malloc.so" "${pkgdir}/etc/ld.so.preload"; then
-      echo "/usr/lib/libhardened_malloc.so" >> "${pkgdir}/etc/ld.so.preload"
-  fi  
+
+  if ! grep -q "/usr/lib/libhardened_malloc.so" "$/etc/ld.so.preload"; then
+      echo "/usr/lib/libhardened_malloc.so" >> "/etc/ld.so.preload"
+  fi
   __update_and_restart
   echo "Hardened configurations applied successfully, restart your system."
   echo "NOTE: Optionally you may run the "setup" command before restarting your system to remove privilege escalation programs which are setuid binaries like sudo, su and ksu. It also disables and masks various services so as to reduce the attack surface and sets the machine's hostname to "localhost" and username to "user", in many cased these are broadcasted so keeping these generic reduces information leak."
@@ -55,13 +58,11 @@ pre_remove() {
   echo "Cleaning up before removal..."
 
   rm -f /etc/chrony.conf
-  sed -i 's|/usr/lib/libhardened_malloc.so||g' /etc/ld.no.preload
+  sed -i "s|/usr/lib/libhardened_malloc.so||g" /etc/ld.no.preload
   rm -f /etc/machine-id
-  rm -f /etc/profile
   rm -f /etc/systemd/resolved.conf
   rm -f /etc/security/access.conf
   rm -f /etc/security/limits.conf
-  rm -f /etc/security/faillock.conf
   rm -f /etc/sysconfig/chronyd
   rm -f /etc/modprobe.d/blacklist.conf
   rm -f /etc/NetworkManager/conf.d/duid.conf
@@ -69,12 +70,14 @@ pre_remove() {
   rm -f /etc/NetworkManager/dispatcher.d/no-wait.d/01-no-send-hostname.sh
   rm -f /etc/NetworkManager/dispatcher.d/01-no-send-hostname.sh
   rm -f /etc/pam.d/passwd
-  rm -f /etc/polkit-1/rules.d/persist.rules
   rm -f /etc/sysctl.d/60-hardening.conf
   rm -f /etc/resolv.conf
   rm -f /etc/swrappers.conf
   rm -f /usr/environment.d/40-hardened-malloc.conf
   rm -f /usr/systemd/system.conf.d/40-hardened-malloc.conf
+  rm -f /etc/profile.d/hardened_malloc.sh
+  rm -f /etc/profile.d/disable-gnome-jit.sh
+
   rmdir --ignore-fail-on-non-empty /etc/NetworkManager/dispatcher.d/no-wait.d
   rmdir --ignore-fail-on-non-empty /etc/NetworkManager/dispatcher.d
   rmdir --ignore-fail-on-non-empty /etc/NetworkManager/conf.d

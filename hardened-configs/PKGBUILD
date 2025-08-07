@@ -39,8 +39,8 @@ package() {
   install -Dm644 "${srcdir}/hardened-configs/etc/NetworkManager/conf.d/macrandomize.conf" "${pkgdir}/etc/NetworkManager/conf.d/macrandomize.conf"
   install -Dm744 "${srcdir}/hardened-configs/etc/NetworkManager/dispatcher.d/no-wait.d/01-no-send-hostname.sh" "${pkgdir}/etc/NetworkManager/dispatcher.d/no-wait.d/01-no-send-hostname.sh"
   install -Dm644 "${srcdir}/hardened-configs/etc/pam.d/passwd" "${pkgdir}/etc/pam.d/passwd"
+  install -Dm644 "${srcdir}/hardened-configs/etc/pam.d/system-login" "${pkgdir}/etc/pam.d/system-login"
   install -Dm644 "${srcdir}/hardened-configs/etc/polkit-1/rules.d/persist.rules" "${pkgdir}/etc/polkit-1/rules.d/persist.rules"
-  install -Dm644 "${srcdir}/hardened-configs/etc/profile" "${pkgdir}/etc/profile"
   install -Dm644 "${srcdir}/hardened-configs/etc/profile.d/disable-gnome-jit.sh" "${pkgdir}/etc/profile.d/disable-gnome-jit.sh"
   install -Dm644 "${srcdir}/hardened-configs/etc/profile.d/hardened_malloc.sh" "${pkgdir}/etc/profile.d/hardened_malloc.sh"
   install -Dm644 "${srcdir}/hardened-configs/etc/systemd/resolved.conf" "${pkgdir}/etc/systemd/resolved.conf"
@@ -51,6 +51,7 @@ package() {
   install -Dm644 "${srcdir}/hardened-configs/etc/swrappers.conf" "${pkgdir}/etc/swrappers.conf"
   install -Dm644 "${srcdir}/hardened-configs/etc/sysconfig/chronyd" "${pkgdir}/etc/sysconfig/chronyd"
   install -Dm644 "${srcdir}/hardened-configs/etc/sysctl.d/60-hardening.conf" "${pkgdir}/etc/sysctl.d/60-hardening.conf"
+  install -Dm644 "${srcdir}/hardened-configs/etc/sysctl.d/90-enable-userns.conf" "${pkgdir}/etc/sysctl.d/90-enable-userns.conf"
   install -Dm644 "${srcdir}/hardened-configs/usr/lib/environment.d/40-hardened-malloc.conf" "${pkgdir}/usr/lib/environment.d/40-hardened-malloc.conf"
   install -Dm644 "${srcdir}/hardened-configs/usr/lib/systemd/system.conf.d/40-hardened-malloc.conf" "${pkgdir}/usr/lib/systemd/system.conf.d/40-hardened-malloc.conf"
 
