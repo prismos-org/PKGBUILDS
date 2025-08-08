@@ -7,7 +7,16 @@ __is_enabled_and_active() {
     done
     return 0
 }
-__update_and_restart() {
+__install_and_restart() {
+  
+  mv /tmp/chrony.conf /etc/chrony.conf
+  mv /tmp/login.defs /etc/login.defs
+  mv /tmp/machine-id /etc/machine-id
+  mv /tmp/pam.d/passwd /etc/pam.d/passwd
+  mv /tmp/pam.d/system-login /etc/pam.d/system-login
+  mv /tmp/systemd/resolved.conf /etc/systemd/resolved.conf
+  rm -rf {/tmp/chrony.conf,/tmp/login.defs,/tmp/machine-id,/tmp/pam.d/,/tmp/systemd}
+
   # Backup and update GRUB config if exists
   if [ -f /etc/default/grub ]; then
       echo "Updating /etc/default/grub..."
@@ -39,11 +48,11 @@ post_install() {
   else
       rm -f /etc/sysctl.d/90-enable-userns.conf
   fi
-
-  if ! grep -q "/usr/lib/libhardened_malloc.so" "$/etc/ld.so.preload"; then
+  chmod 600 /etc/ld.so.preload
+  if ! grep -q "/usr/lib/libhardened_malloc.so" "/etc/ld.so.preload"; then
       echo "/usr/lib/libhardened_malloc.so" >> "/etc/ld.so.preload"
   fi
-  __update_and_restart
+  __install_and_restart
   echo "Hardened configurations applied successfully, restart your system."
   echo "NOTE: Optionally you may run the "setup" command before restarting your system to remove privilege escalation programs which are setuid binaries like sudo, su and ksu. It also disables and masks various services so as to reduce the attack surface and sets the machine's hostname to "localhost" and username to "user", in many cased these are broadcasted so keeping these generic reduces information leak."
 }
@@ -52,11 +61,11 @@ post_upgrade() {
   if [[ -f "$flag" ]]; then
       rm -f /usr/bin/setup
   fi
-  __update_and_restart
+  __install_and_restart
 }
 pre_remove() {
   echo "Cleaning up before removal..."
-
+    
   rm -f /etc/chrony.conf
   sed -i "s|/usr/lib/libhardened_malloc.so||g" /etc/ld.no.preload
   rm -f /etc/machine-id
@@ -66,7 +75,6 @@ pre_remove() {
   rm -f /etc/security/faillock.conf
   rm -f /etc/security/pam_env.conf
   rm -f /etc/sysconfig/chronyd
-
   rm -f /etc/modprobe.d/blacklist.conf
   rm -f /etc/NetworkManager/conf.d/duid.conf
   rm -f /etc/NetworkManager/conf.d/macrandomize.conf
