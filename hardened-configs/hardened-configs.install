@@ -102,8 +102,8 @@ pre_remove() {
   rmdir --ignore-fail-on-non-empty /etc/sysctl.d
 
   rm -f /usr/bin/scurl
-  rm -f /usr/bin/scurld
-  rm -f /usr/bin/scurlt
+  rm -f /usr/bin/scurl-download
+  rm -f /usr/bin/scurl-tor
   rm -f /usr/bin/swget
   rm -f /usr/bin/setup
 

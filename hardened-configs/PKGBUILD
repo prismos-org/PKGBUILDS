@@ -1,7 +1,7 @@
 # Maintainer: nexus <nexus-x[at]tuta[dot]io>
 
 pkgname=hardened-configs
-pkgver=13.d4280d1
+pkgver=22.548e4d4
 pkgrel=1
 pkgdesc="Hardened configurations for Linux Distributions."
 arch=('x86_64')
@@ -11,7 +11,7 @@ depends=('hardened-malloc' 'apparmor' 'grub' 'chrony' 'pusbctl')
 install=hardened-configs.install
 source=('git+https://github.com/prismos-org/hardened-configs' 'hardened-configs.install')
 sha512sums=('SKIP'
-'4b4b66e8cf9d814cdcaf3556551c5e1971857f17d7be82de1a1fb8ba6e4fb6e7652ce532f50c56b212abefb058d3e635b5a9c05c391029708b89e144ac356408')
+'1d7e7600e2db52275ec1e2eb8ed69ba39451e08502be7c7c7f9d8bbed106d04017c423095b8d8f2f7695ec84850dfeec139079e8ae48a958395ebaedcbb21764')
 pkgver() {
   cd "${srcdir}/hardened-configs"
   ( set -o pipefail
@@ -26,8 +26,8 @@ package() {
   # Scripts
   install -Dm755 "${srcdir}/hardened-configs/usr/bin/setup" "${pkgdir}/usr/bin/setup"
   install -Dm755 "${srcdir}/hardened-configs/usr/bin/scurl" "${pkgdir}/usr/bin/scurl"
-  install -Dm755 "${srcdir}/hardened-configs/usr/bin/scurld" "${pkgdir}/usr/bin/scurld"
-  install -Dm755 "${srcdir}/hardened-configs/usr/bin/scurlt" "${pkgdir}/usr/bin/scurlt"
+  install -Dm755 "${srcdir}/hardened-configs/usr/bin/scurl-download" "${pkgdir}/usr/bin/scurl-download"
+  install -Dm755 "${srcdir}/hardened-configs/usr/bin/scurl-tor" "${pkgdir}/usr/bin/scurl-tor"
   install -Dm755 "${srcdir}/hardened-configs/usr/bin/swget" "${pkgdir}/usr/bin/swget"
 
   # Configurations
@@ -40,6 +40,7 @@ package() {
   install -Dm644 "${srcdir}/hardened-configs/etc/systemd/resolved.conf" "${pkgdir}/tmp/systemd/resolved.conf"
 
   install -Dm644 "${srcdir}/hardened-configs/etc/modprobe.d/blacklist.conf" "${pkgdir}/etc/modprobe.d/blacklist.conf"
+  install -Dm644 "${srcdir}/hardened-configs/etc/modprobe.d/blacklist-framebuffer.conf" "${pkgdir}/etc/modprobe.d/blacklist-framebuffer.conf"
   install -Dm644 "${srcdir}/hardened-configs/etc/NetworkManager/conf.d/duid.conf" "${pkgdir}/etc/NetworkManager/conf.d/duid.conf"
   install -Dm644 "${srcdir}/hardened-configs/etc/NetworkManager/conf.d/macrandomize.conf" "${pkgdir}/etc/NetworkManager/conf.d/macrandomize.conf"
   install -Dm744 "${srcdir}/hardened-configs/etc/NetworkManager/dispatcher.d/no-wait.d/01-no-send-hostname.sh" "${pkgdir}/etc/NetworkManager/dispatcher.d/no-wait.d/01-no-send-hostname.sh"
