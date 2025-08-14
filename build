@@ -58,7 +58,7 @@ while [[ "$#" -gt 0 ]]; do
 done
 
 # List of packages to build
-packages=("hardened-configs" "hardened-configs-prismos" "hardened-malloc" "lkrg-dkms" "mullvad-browser" "prismos-keyring" "prismos-plymouth-theme" "pusbctl")
+packages=("hardened-configs" "hardened-configs-prismos" "hardened-malloc" "lkrg-dkms" "mullvad-browser" "prismos-keyring" "prismos-plymouth-theme" "pusbctl" "secure-delete")
 # Build packages if --build option is provided
 if $build; then
     for pkg in "${packages[@]}"; do

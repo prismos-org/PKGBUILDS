@@ -1,0 +1,42 @@
+pkgname=secure-delete
+pkgver=1.070773e
+pkgrel=1
+pkgdesc='Securely delete files.'
+arch=('any')
+url='https://github.com/prismos-org/secure-delete'
+license=('unknown')
+makedepends=('git' 'gcc' 'make')
+source=("git+https://github.com/prismos-org/$pkgname.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  ( set -o pipefail
+    git describe --long --tags --abbrev=7 2>/dev/null |
+      sed 's/\([^-]*-g\)/r\1/;s/-/./g' ||
+    printf "%s.%s" "$(git rev-list --count HEAD)" \
+      "$(git rev-parse --short=7 HEAD)"
+  )
+}
+
+build() {
+    cd "${srcdir}/${pkgname}"
+    make
+}
+
+package() {
+    cd "${srcdir}/${pkgname}"
+    install -Dm755 out/bin/srm "${pkgdir}/usr/bin/srm"
+    install -Dm755 out/bin/sfill "${pkgdir}/usr/bin/sfill"
+    install -Dm755 out/bin/sswap "${pkgdir}/usr/bin/sswap"
+    install -Dm755 out/bin/smem "${pkgdir}/usr/bin/smem"
+    install -Dm755 src/the-cleaner "${pkgdir}/usr/bin/the-cleaner"
+    ln -sf srm "${pkgdir}/usr/bin/sdel"
+    install -Dm644 doc/man/srm.1 "${pkgdir}/usr/local/man/man1/srm/1"
+    install -Dm644 doc/man/sfill.1 "${pkgdir}/usr/local/man/man1/sfill.1"
+    install -Dm644 doc/man/sswap.1 "${pkgdir}/usr/local/man/man1/sswap.1"
+    install -Dm644 doc/man/smem.1 "${pkgdir}/usr/local/man/man1/smem.1"
+    install -Dm644 doc/secure_delete.doc "${pkgdir}/usr/share/doc/secure_delete/secure_delete.doc"
+    install -Dm644 doc/usenix6-gutmann.doc "${pkgdir}/usr/share/doc/secure_delete/usenix6-gutmann.doc"
+}
